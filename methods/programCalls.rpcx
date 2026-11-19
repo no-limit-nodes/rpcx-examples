@@ -1,0 +1,9 @@
+# Instructions of one program with the fee payer and fee of their transaction.
+# A program can be very busy: keep the range short.
+method programCalls(prog: pubkey "Program id", from: time "Start, inclusive", to: time "End, exclusive") {
+  from i = live_instructions
+  filter program == prog && ts >= from && ts < to
+  join side:inner t = (from live_transactions | filter address == prog && ts >= from && ts < to) (==sig)
+  select {i.ts, i.sig, i.outer_index, i.inner_index, i.data, t.signer, t.fee, t.success}
+  sort {-i.ts}
+}

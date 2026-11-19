@@ -1,0 +1,6 @@
+# A list of transactions by signature.
+method txsBySig(sigs: signature[] "Signatures") {
+  from live_transactions
+  filter (sig | in sigs)
+  select {sig, ts, success, fee, signer, programs}
+}

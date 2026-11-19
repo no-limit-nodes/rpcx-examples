@@ -1,0 +1,8 @@
+# Balance of one token for each wallet that holds it.
+method holdersOf(owners: pubkey[] "Wallets", token: pubkey "Token mint") {
+  from live_token_accounts
+  filter (owner | in owners) && mint == token
+  filter amount > 0
+  select {owner, token_account, ui_amount}
+  sort {-ui_amount}
+}

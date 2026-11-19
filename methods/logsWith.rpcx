@@ -1,0 +1,8 @@
+# Log lines of the transactions that touch an address and contain a word.
+method logsWith(addr: pubkey "Any address", word: string "Text to find", from: time "Start, inclusive", to: time "End, exclusive") {
+  from live_logs
+  filter address == addr && ts >= from && ts < to
+  filter (text.contains word line)
+  select {ts, sig, line_index, line}
+  sort {-ts}
+}

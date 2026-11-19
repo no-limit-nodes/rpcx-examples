@@ -1,0 +1,8 @@
+# Every non-empty token holding of a list of wallets, SPL Token and Token-2022.
+method holdings(owners: pubkey[] "Wallets") {
+  from live_token_accounts
+  filter (owner | in owners)
+  filter amount > 0
+  select {owner, mint, ui_amount, program}
+  sort {owner, -ui_amount}
+}

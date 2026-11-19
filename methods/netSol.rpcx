@@ -1,0 +1,14 @@
+# Net SOL change per wallet, in SOL, fees included.
+method netSol(wallets: pubkey[] "Wallets", from: time, to: time) {
+  from live_sol_balance_changes
+  filter (address | in wallets) && ts >= from && ts < to
+  filter account == address
+  group {address} (
+    aggregate {
+      txs = count_distinct sig,
+      net_lamports = sum change
+    }
+  )
+  derive {net_sol = net_lamports / 1000000000}
+  sort {-net_sol}
+}

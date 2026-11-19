@@ -1,0 +1,8 @@
+# Top programs by top-level instruction count. A range without a key may cover at most 3,000 slots.
+method topPrograms(from: time "Start, inclusive", to: time "End, exclusive", n: uint64 = 20 "Rows") {
+  from live_instructions
+  filter ts >= from && ts < to && stack_height == 1
+  group {program} (aggregate {calls = count this, txs = count_distinct sig})
+  sort {-calls}
+  take n
+}

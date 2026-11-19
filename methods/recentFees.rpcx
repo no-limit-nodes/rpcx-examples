@@ -1,0 +1,8 @@
+# The fees and programs of recent transactions of many wallets, failed ones included.
+method recentFees(wallets: pubkey[] "Wallets", from: time, to: time, limit: uint64 = 100 "Max rows") {
+  from live_transactions
+  filter (address | in wallets) && ts >= from && ts < to
+  select {address, ts, sig, success, fee, programs}
+  sort {-ts}
+  take limit
+}

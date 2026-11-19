@@ -1,0 +1,13 @@
+# Net token change per wallet and mint, in base units.
+method tokenFlows(wallets: pubkey[] "Wallets", from: time, to: time) {
+  from live_token_balance_changes
+  filter (address | in wallets) && ts >= from && ts < to
+  filter owner == address
+  group {address, mint} (
+    aggregate {
+      txs = count_distinct sig,
+      net = sum change
+    }
+  )
+  sort {address, -txs}
+}

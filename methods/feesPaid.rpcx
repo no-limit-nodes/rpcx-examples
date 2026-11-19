@@ -1,0 +1,14 @@
+# Fees paid per wallet, in lamports, as the fee payer.
+method feesPaid(wallets: pubkey[] "Wallets", from: time, to: time) {
+  from live_transactions
+  filter (address | in wallets) && ts >= from && ts < to
+  filter signer == address
+  group {address} (
+    aggregate {
+      txs = count this,
+      fees = sum fee,
+      compute = sum compute_units
+    }
+  )
+  sort {-fees}
+}

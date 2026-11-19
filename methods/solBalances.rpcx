@@ -1,0 +1,7 @@
+# The SOL balance of many wallets right now. An address with no account returns no row.
+method solBalances(wallets: pubkey[] "Wallets") {
+  from live_accounts
+  filter (address | in wallets)
+  select {address, sol = lamports / 1000000000, owner, slot}
+  sort {-sol}
+}

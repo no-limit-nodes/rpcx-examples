@@ -1,0 +1,6 @@
+# Block count and transactions in a slot range (up to 3,000 slots).
+method blockStats(start: uint64 "First slot, inclusive", stop: uint64 "Last slot, exclusive") {
+  from live_blocks
+  filter slot >= start && slot < stop
+  aggregate {blocks = count this, txs = sum tx_count, first_ts = min ts, last_ts = max ts}
+}

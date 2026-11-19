@@ -1,0 +1,14 @@
+# Transactions per wallet in a window, with failures and the latest transaction.
+method activity(wallets: pubkey[] "Wallets", from: time "Start (UTC)", to: time "End (UTC)") {
+  from live_signatures
+  filter (address | in wallets) && ts >= from && ts < to
+  derive {failed = case [success == false => 1, true => 0]}
+  group {address} (
+    aggregate {
+      txs = count this,
+      failures = sum failed,
+      last_tx = max ts
+    }
+  )
+  sort {-txs}
+}

@@ -1,0 +1,10 @@
+# Transactions per wallet and hour.
+method hourlyTxs(wallets: pubkey[] "Wallets", from: time "Start (UTC)", to: time "End (UTC)") {
+  from live_signatures
+  filter (address | in wallets) && ts >= from && ts < to
+  derive {hour = date.trunc "hour" ts}
+  group {address, hour} (
+    aggregate {txs = count this}
+  )
+  sort {address, hour}
+}

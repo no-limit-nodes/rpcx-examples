@@ -1,0 +1,6 @@
+# Every transaction of a list of wallets in a time window, newest first.
+method txsFor(wallets: pubkey[] "Accounts", from: time, to: time) {
+  from live_transactions
+  filter (address | in wallets) && ts >= from && ts < to
+  sort {-ts}
+}
